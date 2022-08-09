@@ -1,0 +1,4 @@
+---
+
+elasticsearchHosts: "http://metricstore-master:9200"
+imageTag: 7.17.5

@@ -1,0 +1,16 @@
+---
+
+daemonset.enabled: false
+imageTag: 7.17.5
+
+deployment:
+  metricbeatConfig:
+    metricbeat.yml: |
+      metricbeat.modules:
+      - module: elasticsearch
+        enabled: true
+        xpack.enabled: true
+        period: 10s
+        hosts: ["${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}"]
+      output.elasticsearch:
+        hosts: '${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'

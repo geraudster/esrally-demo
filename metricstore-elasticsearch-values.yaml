@@ -1,0 +1,6 @@
+---
+clusterName: metricstore
+
+imageTag: 7.17.5
+replicas: 1
+minimumMasterNodes: 1
