@@ -73,6 +73,10 @@ helm install stack-monitoring-metricbeat elastic/metricbeat --values metricbeat-
 
 ## Launch geonames race
 
+```
+kubectl apply -f esrally-geonames-job.yaml
+```
+
 Follow activity:
 ```
 kubectl logs -f $(kubectl get pods --namespace=default -l job-name=esrally-geonames -ojsonpath='{.items[0].metadata.name}')

@@ -14,3 +14,5 @@ deployment:
         hosts: ["${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}"]
       output.elasticsearch:
         hosts: '${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
+      setup.template.settings:
+        index.number_of_replicas: 0
