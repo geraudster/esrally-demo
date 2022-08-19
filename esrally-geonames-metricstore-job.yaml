@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: esrally-geonames-metricstore-entrypoint-configmap
+  name: esrally-geonames-entrypoint-configmap
 data:
   entrypoint.sh: |-
     #!/bin/bash
@@ -10,7 +10,9 @@ data:
     --track=geonames \
     --target-hosts elasticsearch-master:9200 \
     --pipeline=benchmark-only \
-    --test-mode
+    --challenge=append-no-conflicts-index-only \
+    --user-tag="intention:bulk_size_1000" \
+    --track-param="bulk_size:1000"
   rally.ini: |-
     [meta]
     config.version = 17
@@ -54,7 +56,7 @@ data:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: esrally-geonames-metricstore
+  name: esrally-geonames
 spec:
   template:
     spec:
@@ -76,6 +78,6 @@ spec:
         - name: configmap-volume
           configMap:
             defaultMode: 0755
-            name: esrally-geonames-metricstore-entrypoint-configmap
+            name: esrally-geonames-entrypoint-configmap
       restartPolicy: Never
   backoffLimit: 4

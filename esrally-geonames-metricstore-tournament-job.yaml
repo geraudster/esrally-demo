@@ -2,20 +2,17 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: esrally-geonames-entrypoint-configmap
+  name: esrally-geonames-tournament-entrypoint-configmap
 data:
   entrypoint.sh: |-
     #!/bin/bash
-    esrally race \
-    --track=geonames \
-    --target-hosts elasticsearch-master:9200 \
-    --pipeline=benchmark-only
+    sleep infinity
 
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: esrally-geonames
+  name: esrally-geonames-tournament
 spec:
   template:
     spec:
@@ -25,14 +22,22 @@ spec:
         command:
           - /bin/entrypoint.sh
         volumeMounts:
-          - name: configmap-volume
+          - name: configmap-tournament-volume
             mountPath: /bin/entrypoint.sh
             readOnly: true
             subPath: entrypoint.sh
+          - name: configmap-volume
+            mountPath: /rally/.rally/rally.ini
+            readOnly: true
+            subPath: rally.ini
       volumes:
         - name: configmap-volume
           configMap:
             defaultMode: 0755
             name: esrally-geonames-entrypoint-configmap
+        - name: configmap-tournament-volume
+          configMap:
+            defaultMode: 0755
+            name: esrally-geonames-tournament-entrypoint-configmap
       restartPolicy: Never
   backoffLimit: 4
