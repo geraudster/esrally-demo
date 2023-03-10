@@ -9,10 +9,12 @@ data:
     esrally race \
     --track=geonames \
     --target-hosts elasticsearch-master:9200 \
+    --client-options="use_ssl:true,verify_certs:yes,basic_auth_user:'elastic',basic_auth_password:'${ELASTICSEARCH_PASSWORD}',ca_certs:'/usr/share/elasticsearch/certs/ca.crt'" \
     --pipeline=benchmark-only \
     --challenge=append-no-conflicts-index-only \
-    --user-tag="intention:bulk_size_1000" \
-    --track-param="bulk_size:1000"
+    --user-tag="intention:bulk_size_100" \
+    --track-param="bulk_size:100"
+
   rally.ini: |-
     [meta]
     config.version = 17
@@ -35,10 +37,10 @@ data:
     datastore.type = elasticsearch
     datastore.host = metricstore-master
     datastore.port = 9200
-    datastore.secure = false
-    datastore.user =
-    datastore.password =
+    datastore.secure = true
+    datastore.user = elastic
     datastore.number_of_replicas = 0
+    datastore.ssl.certificate_authorities = /usr/share/metricstore/certs/ca.crt
 
     [tracks]
     default.url = https://github.com/elastic/rally-tracks
@@ -74,10 +76,34 @@ spec:
             mountPath: /rally/.rally/rally.ini
             readOnly: true
             subPath: rally.ini
+          - name: elasticsearch-master-certs
+            mountPath: /usr/share/elasticsearch/certs/
+            readOnly: true
+          - name: metricstore-master-certs
+            mountPath: /usr/share/metricstore/certs/
+            readOnly: true
+        env:
+          - name: ELASTICSEARCH_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: elasticsearch-master-credentials
+                key: password
+          - name: RALLY_REPORTING_DATASTORE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: metricstore-master-credentials
+                key: password
+
       volumes:
         - name: configmap-volume
           configMap:
             defaultMode: 0755
             name: esrally-geonames-entrypoint-configmap
+        - name: elasticsearch-master-certs
+          secret:
+            secretName: elasticsearch-master-certs
+        - name: metricstore-master-certs
+          secret:
+            secretName: metricstore-master-certs
       restartPolicy: Never
   backoffLimit: 4

@@ -6,7 +6,7 @@
 ## For local use: set up minikube
 
 ```
-minikube start -p es-minikube --cpus=4 --memory=12g
+minikube start -p es-minikube --cpus=6 --memory=12g
 minikube profile es-minikube
 ```
 
@@ -18,7 +18,6 @@ minikube kubectl -- get pods -A
 ## Deploy Elastic with Helm
 
 ### Deploy Elasticsearch
-_As of August 2022,the Helm chart for ES 8.x is still under development_
 
 ```
 helm repo add elastic https://helm.elastic.co

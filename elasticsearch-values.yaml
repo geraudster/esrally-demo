@@ -1,19 +1,5 @@
 ---
 
-imageTag: 7.17.5
+imageTag: 8.5.1
 replicas: 1
 minimumMasterNodes: 1
-
-# Removes deprecation warnings
-roles:
-  master: null
-  data: null
-  ingest: null
-  ml: null
-  remote_cluster_client: null
-
-extraEnvs:
-  - name: discovery.type
-    value: single-node
-  - name: node.roles
-    value: "master,data,ingest"

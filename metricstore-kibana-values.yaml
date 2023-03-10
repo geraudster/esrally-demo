@@ -1,4 +1,7 @@
 ---
 
-elasticsearchHosts: "http://metricstore-master:9200"
-imageTag: 7.17.5
+elasticsearchHosts: "https://metricstore-master:9200"
+elasticsearchCertificateSecret: metricstore-master-certs
+elasticsearchCredentialSecret: metricstore-master-credentials
+
+imageTag: 8.5.1

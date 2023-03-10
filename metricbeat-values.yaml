@@ -1,7 +1,7 @@
 ---
 
 daemonset.enabled: false
-imageTag: 7.17.5
+imageTag: 8.5.1
 
 deployment:
   metricbeatConfig:
@@ -11,8 +11,16 @@ deployment:
         enabled: true
         xpack.enabled: true
         period: 10s
-        hosts: ["${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}"]
+        hosts: ["https://${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}"]
+        ssl.enabled: true
+        ssl.certificate_authorities: ["/usr/share/metricbeat/certs/ca.crt"]
+        username: '${ELASTICSEARCH_USERNAME}'
+        password: '${ELASTICSEARCH_PASSWORD}'
       output.elasticsearch:
-        hosts: '${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
+        hosts: 'https://${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
+        ssl.enabled: true
+        ssl.certificate_authorities: ["/usr/share/metricbeat/certs/ca.crt"]
+        username: '${ELASTICSEARCH_USERNAME}'
+        password: '${ELASTICSEARCH_PASSWORD}'
       setup.template.settings:
         index.number_of_replicas: 0
